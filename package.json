@@ -2,6 +2,9 @@
   "name": "issue-reporter-ts",
   "displayName": "Issue Reporter",
   "description": "Create issues using n8n webhook from VSCode",
+  "repository": {
+    "url": "https://github.com/fbriansyah/issue-reporter-ts"
+  },
   "version": "0.0.1",
   "engines": {
     "vscode": "^1.96.0"
@@ -73,7 +76,8 @@
     "watch": "tsc -watch -p ./",
     "pretest": "npm run compile && npm run lint",
     "lint": "eslint src",
-    "test": "vscode-test"
+    "test": "vscode-test",
+    "package": "vsce package"
   },
   "devDependencies": {
     "@types/mocha": "^10.0.10",
