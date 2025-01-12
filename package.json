@@ -19,17 +19,8 @@
 			"explorer": [
 				{
 					"type": "webview",
-					"id": "calicoColors.colorsView",
-					"name": "Calico Colors"
-				}
-			]
-		},
-    "menus": {
-			"view/title": [
-				{
-					"command": "calicoColors.clearColors",
-					"group": "navigation",
-					"when": "view == calicoColors.colorsView"
+					"id": "issue-reporter-ts.issueView",
+					"name": "Issue Reporter"
 				}
 			]
 		},
@@ -41,17 +32,6 @@
       {
         "command": "issue-reporter-ts.setup",
         "title": "Issue Reporter: Setup Webhook"
-      },
-      {
-        "command": "calicoColors.addColor",
-        "category": "Calico Colors",
-        "title": "Add Color"
-      },
-      {
-        "command": "calicoColors.clearColors",
-        "category": "Calico Colors",
-        "title": "Clear Colors",
-        "icon": "$(clear-all)"
       }
     ],
     "configuration": {
