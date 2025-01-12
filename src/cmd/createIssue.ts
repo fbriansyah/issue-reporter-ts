@@ -6,7 +6,8 @@ export default async function createIssue() {
   vscode.window.showInformationMessage('Create Issue Command');
   try {
     // get config from settings
-    const webhookUrl = vscode.workspace.getConfiguration('issueReporter').get<string>('webhookUrl');
+    const configuration = vscode.workspace.getConfiguration('issueReporter');
+    const webhookUrl = configuration.get<string>('webhookUrl');
     if (!webhookUrl) {
         throw new Error('Webhook URL is not configured. Please set it in settings.');
     }
