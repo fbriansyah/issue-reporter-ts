@@ -9,8 +9,11 @@ body {
 	color: var(--vscode-input-foreground);
 	background-color: var(--vscode-input-background);
 	border: none;
-	padding: 0.25rem 0.5rem;
+	padding: 0.5rem 0.75rem;
     border-radius: 5px;
+}
+#issue-title {
+	padding: 0.5rem 0.75rem;
 }
 
 .issue-select {
@@ -39,5 +42,7 @@ body {
 
 .label {
     display: block;
+	font-weight: 400;
+	font-size: 1.25rem;
     margin-bottom: 4px;
 }

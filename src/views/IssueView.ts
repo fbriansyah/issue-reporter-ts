@@ -68,7 +68,10 @@ export class IssueViewProvider implements vscode.WebviewViewProvider {
       const response = await axios.post(webhookUrl, data);
       
       if (response.status >= 200 && response.status < 300) {
-          vscode.window.showInformationMessage('Issue created successfully!');
+        if(this._view) {
+          this._view.webview.postMessage({ type: 'issueCreated' });
+        }
+        vscode.window.showInformationMessage('Issue created successfully!');
       } else {
           throw new Error(`HTTP error! status: ${response.status}`);
       }
@@ -106,26 +109,20 @@ export class IssueViewProvider implements vscode.WebviewViewProvider {
           <html lang="en">
           <head>
             <meta charset="UTF-8">
-    
-            <!--
-              Use a content security policy to only allow loading styles from our extension directory,
-              and only allow scripts that have a specific nonce.
-              (See the 'webview-sample' extension sample for img-src content security policy examples)
-            -->
             <meta http-equiv="Content-Security-Policy" content="default-src 'none'; style-src ${webview.cspSource}; script-src 'nonce-${nonce}';">
-    
             <meta name="viewport" content="width=device-width, initial-scale=1.0">
     
             <link href="${styleResetUri}" rel="stylesheet">
             <link href="${styleVSCodeUri}" rel="stylesheet">
             <link href="${styleMainUri}" rel="stylesheet">
     
-            <title>Cat Colors</title>
+            <title>Issue Reporter</title>
           </head>
           <body>
             <div>
               <label class="label">Select Service</label>
               <select id="issue-service" name="issue-service" class="issue-select">
+                <option value=""> - Choose One - </option>
                 ${serviceOptions}
               </select>
             </div>
