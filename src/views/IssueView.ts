@@ -1,6 +1,7 @@
 import axios from "axios";
 import * as vscode from "vscode";
 import { getNonce } from "../utils/common";
+import { AllServices } from "../constants/services";
 
 interface Issue {
   service?: string;
@@ -96,6 +97,11 @@ export class IssueViewProvider implements vscode.WebviewViewProvider {
     // Use a nonce to only allow a specific script to be run.
     const nonce = getNonce();
 
+    let serviceOptions = '';
+    for(let service of AllServices) {
+      serviceOptions += `<option value="${service.value}">${service.name}</option>`;
+    }
+
     return `<!DOCTYPE html>
           <html lang="en">
           <head>
@@ -118,11 +124,9 @@ export class IssueViewProvider implements vscode.WebviewViewProvider {
           </head>
           <body>
             <div>
-              <label class="label">Service</label>
+              <label class="label">Select Service</label>
               <select id="issue-service" name="issue-service" class="issue-select">
-                <option value="snap-core-processor">Snap Core</option>
-                <option value="backend-portal">Backend Portal</option>
-                <option value="wallet">Wallet</option>
+                ${serviceOptions}
               </select>
             </div>
             <div class="input-control">

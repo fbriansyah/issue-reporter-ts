@@ -13,7 +13,9 @@ export default async function createIssue() {
     }
 
     // get service
-    const service = await vscode.window.showQuickPick(AllServices);
+    const service = await vscode.window.showQuickPick(AllServices.map(service => service.value), {
+      placeHolder: 'Select a service',
+    });
     if (!service) {
         throw new Error('No service selected.');
     }

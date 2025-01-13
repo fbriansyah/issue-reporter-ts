@@ -1,7 +1,16 @@
 export const PGServices = [
-  'snap-core-processor',
-  'backend-portal',
-  'wallet'
+  {
+    name: "Snap Core Processor",
+    value: "snap-core-processor",
+  },
+  {
+    name: "Backend Portal",
+    value: "backend-portal",
+  },
+  {
+    name: "Wallet",
+    value: "wallet",
+  }
 ];
 
 export const AllServices = PGServices.concat([]);
