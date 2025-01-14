@@ -1,0 +1,603 @@
+{
+  "name": "Issue Reporter",
+  "nodes": [
+    {
+      "parameters": {
+        "httpMethod": "POST",
+        "path": "c9afcb7b-1aaa-4f95-a9e1-ff53613514df",
+        "options": {
+          "allowedOrigins": "*"
+        }
+      },
+      "type": "n8n-nodes-base.webhook",
+      "typeVersion": 2,
+      "position": [
+        0,
+        0
+      ],
+      "id": "016a31aa-fe94-4f77-98f9-a3694d0646bf",
+      "name": "Webhook",
+      "webhookId": "c9afcb7b-1aaa-4f95-a9e1-ff53613514df"
+    },
+    {
+      "parameters": {
+        "agent": "conversationalAgent",
+        "promptType": "define",
+        "text": "=You are expert translator. Translate message below to profesional english languange. Replace <br/> with space\n\n{{ $json.body.description }}",
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.agent",
+      "typeVersion": 1.7,
+      "position": [
+        220,
+        0
+      ],
+      "id": "1c1376ba-b051-4dd3-9b19-fce785369bae",
+      "name": "AI Agent"
+    },
+    {
+      "parameters": {
+        "model": "gpt-4",
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.lmChatOpenAi",
+      "typeVersion": 1,
+      "position": [
+        200,
+        240
+      ],
+      "id": "801fa8bf-c4c5-4953-b487-a02724398c08",
+      "name": "OpenAI Chat Model",
+      "credentials": {
+        "openAiApi": {
+          "id": "8ws5SwY7j5oN5Zqb",
+          "name": "OpenAi account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "assignments": {
+          "assignments": [
+            {
+              "id": "47808c51-bc5d-4605-8857-88a61e5f5ac1",
+              "name": "service",
+              "value": "={{ $('Webhook').item.json.body.service }}",
+              "type": "string"
+            },
+            {
+              "id": "75a83db6-b242-483b-be02-3dea2a0b3eb7",
+              "name": "title",
+              "value": "={{ $('Webhook').item.json.body.title }}",
+              "type": "string"
+            },
+            {
+              "id": "77ee270e-51e4-407b-a3b8-b3e72125d0d5",
+              "name": "aiMessage",
+              "value": "={{ $json.output }}",
+              "type": "string"
+            },
+            {
+              "id": "4a691049-d259-49af-b743-27f69e7ae3b8",
+              "name": "originalMessage",
+              "value": "={{ $('Webhook').item.json.body.description }}",
+              "type": "string"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.4,
+      "position": [
+        580,
+        0
+      ],
+      "id": "cd67fdb4-4f43-43e3-93d3-56b5ea9614f5",
+      "name": "Map Trigger Input"
+    },
+    {
+      "parameters": {
+        "rules": {
+          "values": [
+            {
+              "conditions": {
+                "options": {
+                  "caseSensitive": true,
+                  "leftValue": "",
+                  "typeValidation": "strict",
+                  "version": 2
+                },
+                "conditions": [
+                  {
+                    "leftValue": "={{ $json.service }}",
+                    "rightValue": "snap-core-processor",
+                    "operator": {
+                      "type": "string",
+                      "operation": "equals"
+                    }
+                  }
+                ],
+                "combinator": "and"
+              },
+              "renameOutput": true,
+              "outputKey": "snap-core"
+            },
+            {
+              "conditions": {
+                "options": {
+                  "caseSensitive": true,
+                  "leftValue": "",
+                  "typeValidation": "strict",
+                  "version": 2
+                },
+                "conditions": [
+                  {
+                    "id": "53d07643-7f86-488b-9a2a-05ecf38a9d66",
+                    "leftValue": "={{ $json.service }}",
+                    "rightValue": "backend-portal",
+                    "operator": {
+                      "type": "string",
+                      "operation": "equals",
+                      "name": "filter.operator.equals"
+                    }
+                  }
+                ],
+                "combinator": "and"
+              },
+              "renameOutput": true,
+              "outputKey": "backend-portal"
+            },
+            {
+              "conditions": {
+                "options": {
+                  "caseSensitive": true,
+                  "leftValue": "",
+                  "typeValidation": "strict",
+                  "version": 2
+                },
+                "conditions": [
+                  {
+                    "id": "164b0f2f-d5ca-4ea5-908a-3499cde1b6cb",
+                    "leftValue": "={{ $json.service }}",
+                    "rightValue": "wallet",
+                    "operator": {
+                      "type": "string",
+                      "operation": "equals",
+                      "name": "filter.operator.equals"
+                    }
+                  }
+                ],
+                "combinator": "and"
+              },
+              "renameOutput": true,
+              "outputKey": "wallet"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.switch",
+      "typeVersion": 3.2,
+      "position": [
+        800,
+        0
+      ],
+      "id": "07a85e56-d9af-4659-b2c7-2230dea47a5c",
+      "name": "Switch"
+    },
+    {
+      "parameters": {
+        "authentication": "oAuth2",
+        "owner": {
+          "__rl": true,
+          "value": "febriansyahnr",
+          "mode": "list",
+          "cachedResultName": "febriansyahnr",
+          "cachedResultUrl": "https://github.com/febriansyahnr"
+        },
+        "repository": {
+          "__rl": true,
+          "value": "routing-processor",
+          "mode": "list",
+          "cachedResultName": "routing-processor",
+          "cachedResultUrl": "https://github.com/febriansyahnr/routing-processor"
+        },
+        "title": "=[{{ $json.service }}] {{ $json.title }}",
+        "body": "={{ $json.aiMessage }}",
+        "labels": [
+          {
+            "label": "Bug"
+          }
+        ],
+        "assignees": []
+      },
+      "type": "n8n-nodes-base.github",
+      "typeVersion": 1,
+      "position": [
+        1080,
+        -240
+      ],
+      "id": "90e3efd7-514e-46b2-ba3a-4c757af643f2",
+      "name": "GitHub Snap Core",
+      "credentials": {
+        "githubOAuth2Api": {
+          "id": "EL41l5br0tbsIFBj",
+          "name": "Paper N8N"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "team": "3708016",
+        "space": "90160375379",
+        "folderless": true,
+        "list": "901601097993",
+        "name": "=[Snap Core] {{ $('Map Trigger Input').item.json.title }}",
+        "additionalFields": {
+          "customFieldsJson": "[\n  {\n    \"id\": \"6390c35b-ba0c-47f1-8875-610ec91f79f6\",\n    \"value\": [\"97736fcc-545c-4452-b46a-17113e32009f\"]\n  },\n  {\n    \"id\": \"6ef0af9c-5d23-4ad8-b9a4-3aece369ec4e\",\n    \"value\": \"cf6c99e9-ce8c-4be2-8da6-1b8cbaa99933\"\n  },\n  {\n    \"id\": \"24fb73fe-40ae-417c-b572-87757237a60f\",\n    \"value\": \"1724338a-71e6-49c8-9836-922bb2a6fbfe\"\n  }\n]",
+          "content": "=[Automation Test]\nProblem\n{{ $('Map Trigger Input').item.json.aiMessage }}\nOriginal Message\n{{ $('Map Trigger Input').item.json.originalMessage }}\n\nGithub Issue: {{ $json.url }}"
+        }
+      },
+      "type": "n8n-nodes-base.clickUp",
+      "typeVersion": 1,
+      "position": [
+        1340,
+        -240
+      ],
+      "id": "68ff0140-790a-49e5-8cb3-341a5c756df5",
+      "name": "Snap Core CU",
+      "credentials": {
+        "clickUpApi": {
+          "id": "3YfQQKSSMhaXUKdZ",
+          "name": "Febrian CU"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "authentication": "oAuth2",
+        "owner": {
+          "__rl": true,
+          "value": "febriansyahnr",
+          "mode": "list",
+          "cachedResultName": "febriansyahnr",
+          "cachedResultUrl": "https://github.com/febriansyahnr"
+        },
+        "repository": {
+          "__rl": true,
+          "value": "routing-processor",
+          "mode": "list",
+          "cachedResultName": "routing-processor",
+          "cachedResultUrl": "https://github.com/febriansyahnr/routing-processor"
+        },
+        "title": "=[{{ $json.service }}] {{ $json.title }}",
+        "body": "={{ $json.aiMessage }}",
+        "labels": [
+          {
+            "label": "Bug"
+          }
+        ],
+        "assignees": []
+      },
+      "type": "n8n-nodes-base.github",
+      "typeVersion": 1,
+      "position": [
+        1080,
+        0
+      ],
+      "id": "bd791727-37e9-4299-9d27-6628e69c2b7b",
+      "name": "GitHub BE Portal",
+      "credentials": {
+        "githubOAuth2Api": {
+          "id": "EL41l5br0tbsIFBj",
+          "name": "Paper N8N"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "team": "3708016",
+        "space": "90160375379",
+        "folderless": true,
+        "list": "901601097993",
+        "name": "=[Backend Portal] {{ $('Map Trigger Input').item.json.title }}",
+        "additionalFields": {
+          "customFieldsJson": "[\n  {\n    \"id\": \"6390c35b-ba0c-47f1-8875-610ec91f79f6\",\n    \"value\": [\"3234d44f-8a65-4b72-b7d6-adfc831f8bd9\"]\n  },\n  {\n    \"id\": \"6ef0af9c-5d23-4ad8-b9a4-3aece369ec4e\",\n    \"value\": \"cf6c99e9-ce8c-4be2-8da6-1b8cbaa99933\"\n  },\n  {\n    \"id\": \"24fb73fe-40ae-417c-b572-87757237a60f\",\n    \"value\": \"1724338a-71e6-49c8-9836-922bb2a6fbfe\"\n  }\n]",
+          "content": "=[Automation Test]\nProblem\n{{ $('Map Trigger Input').item.json.aiMessage }}\nOriginal Message\n{{ $('Map Trigger Input').item.json.originalMessage }}\n\nGithub Issue: {{ $json.url }}"
+        }
+      },
+      "type": "n8n-nodes-base.clickUp",
+      "typeVersion": 1,
+      "position": [
+        1340,
+        0
+      ],
+      "id": "e1d408d0-f605-4ef3-ae1a-6d2dd36966ba",
+      "name": "BE Portal CU",
+      "credentials": {
+        "clickUpApi": {
+          "id": "3YfQQKSSMhaXUKdZ",
+          "name": "Febrian CU"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "authentication": "oAuth2",
+        "owner": {
+          "__rl": true,
+          "value": "febriansyahnr",
+          "mode": "list",
+          "cachedResultName": "febriansyahnr",
+          "cachedResultUrl": "https://github.com/febriansyahnr"
+        },
+        "repository": {
+          "__rl": true,
+          "value": "routing-processor",
+          "mode": "list",
+          "cachedResultName": "routing-processor",
+          "cachedResultUrl": "https://github.com/febriansyahnr/routing-processor"
+        },
+        "title": "=[{{ $json.service }}] {{ $json.title }}",
+        "body": "={{ $json.aiMessage }}",
+        "labels": [
+          {
+            "label": "Bug"
+          }
+        ],
+        "assignees": []
+      },
+      "type": "n8n-nodes-base.github",
+      "typeVersion": 1,
+      "position": [
+        1080,
+        240
+      ],
+      "id": "a6649129-d796-4456-90f8-83e97050d1f5",
+      "name": "GitHub Wallet",
+      "credentials": {
+        "githubOAuth2Api": {
+          "id": "EL41l5br0tbsIFBj",
+          "name": "Paper N8N"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "team": "3708016",
+        "space": "90160375379",
+        "folderless": true,
+        "list": "901601097993",
+        "name": "=[Wallet] {{ $('Map Trigger Input').item.json.title }}",
+        "additionalFields": {
+          "customFieldsJson": "[\n  {\n    \"id\": \"6390c35b-ba0c-47f1-8875-610ec91f79f6\",\n    \"value\": [\"e0db509d-7d0a-443e-bbbf-3c0b97ab7986\"]\n  },\n  {\n    \"id\": \"6ef0af9c-5d23-4ad8-b9a4-3aece369ec4e\",\n    \"value\": \"cf6c99e9-ce8c-4be2-8da6-1b8cbaa99933\"\n  },\n  {\n    \"id\": \"24fb73fe-40ae-417c-b572-87757237a60f\",\n    \"value\": \"1724338a-71e6-49c8-9836-922bb2a6fbfe\"\n  }\n]",
+          "content": "=[Automation Test]\nProblem\n{{ $('Map Trigger Input').item.json.aiMessage }}\nOriginal Message\n{{ $('Map Trigger Input').item.json.originalMessage }}\n\nGithub Issue: {{ $json.url }}"
+        }
+      },
+      "type": "n8n-nodes-base.clickUp",
+      "typeVersion": 1,
+      "position": [
+        1340,
+        240
+      ],
+      "id": "28225b3c-933d-4403-b004-625cc243d50c",
+      "name": "Wallet CU",
+      "credentials": {
+        "clickUpApi": {
+          "id": "3YfQQKSSMhaXUKdZ",
+          "name": "Febrian CU"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "method": "POST",
+        "url": "https://hooks.slack.com/services/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",
+        "sendBody": true,
+        "specifyBody": "json",
+        "jsonBody": "={\n    \"attachments\": [\n        {\n            \"color\": \"warning\",\n            \"author_name\": \"Febrian Bot\",\n            \"author_subname\": \"Issue Reporter\",\n            \"title\": \"{{ $('Map Trigger Input').item.json.title }}\",\n            \"fields\": [\n                {\n                    \"title\": \"Description\",\n                    \"value\": \"{{ $('Map Trigger Input').item.json.aiMessage }}\",\n                    \"short\": false\n                },\n                {\n                    \"title\": \"Service\",\n                    \"value\": \"snap-core-processor\",\n                    \"short\": false\n                },\n                {\n                    \"title\": \"CU Link\",\n                    \"value\": \"{{ $json.url }}\",\n                    \"short\": false\n                },\n                {\n                    \"title\": \"Github Issue\",\n                    \"value\": \"{{ $('GitHub Snap Core').item.json.html_url }}\",\n                    \"short\": false\n                },\n                {\n                    \"title\": \"Original Message\",\n                    \"value\": \"{{ $('Map Trigger Input').item.json.originalMessage }}\",\n                    \"short\": false\n                }\n            ]\n        }\n    ]\n}",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [
+        1580,
+        -240
+      ],
+      "id": "0932ac3c-bb2a-41a5-ae13-eae8bee53282",
+      "name": "Snap Slack Bot"
+    },
+    {
+      "parameters": {
+        "method": "POST",
+        "url": "https://hooks.slack.com/services/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",
+        "sendBody": true,
+        "specifyBody": "json",
+        "jsonBody": "={\n    \"attachments\": [\n        {\n            \"color\": \"warning\",\n            \"author_name\": \"Febrian Bot\",\n            \"author_subname\": \"Issue Reporter\",\n            \"title\": \"{{ $('Map Trigger Input').item.json.title }}\",\n            \"fields\": [\n                {\n                    \"title\": \"Description\",\n                    \"value\": \"{{ $('Map Trigger Input').item.json.aiMessage }}\",\n                    \"short\": false\n                },\n                {\n                    \"title\": \"Service\",\n                    \"value\": \"backend-portal\",\n                    \"short\": false\n                },\n                {\n                    \"title\": \"CU Link\",\n                    \"value\": \"{{ $json.url }}\",\n                    \"short\": false\n                },\n                {\n                    \"title\": \"Github Issue\",\n                    \"value\": \"{{ $('GitHub BE Portal').item.json.html_url }}\",\n                    \"short\": false\n                },\n                {\n                    \"title\": \"Original Message\",\n                    \"value\": \"{{ $('Map Trigger Input').item.json.originalMessage }}\",\n                    \"short\": false\n                }\n            ]\n        }\n    ]\n}",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [
+        1580,
+        0
+      ],
+      "id": "be137ab7-dc81-4844-b412-be22aa24b50c",
+      "name": "BE Portal Slack Bot"
+    },
+    {
+      "parameters": {
+        "method": "POST",
+        "url": "https://hooks.slack.com/services/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",
+        "sendBody": true,
+        "specifyBody": "json",
+        "jsonBody": "={\n    \"attachments\": [\n        {\n            \"color\": \"warning\",\n            \"author_name\": \"Febrian Bot\",\n            \"author_subname\": \"Issue Reporter\",\n            \"title\": \"{{ $('Map Trigger Input').item.json.title }}\",\n            \"fields\": [\n                {\n                    \"title\": \"Description\",\n                    \"value\": \"{{ $('Map Trigger Input').item.json.aiMessage }}\",\n                    \"short\": false\n                },\n                {\n                    \"title\": \"Service\",\n                    \"value\": \"wallet\",\n                    \"short\": false\n                },\n                {\n                    \"title\": \"CU Link\",\n                    \"value\": \"{{ $json.url }}\",\n                    \"short\": false\n                },\n                {\n                    \"title\": \"Github Issue\",\n                    \"value\": \"{{ $('GitHub Wallet').item.json.html_url }}\",\n                    \"short\": false\n                },\n                {\n                    \"title\": \"Original Message\",\n                    \"value\": \"{{ $('Map Trigger Input').item.json.originalMessage }}\",\n                    \"short\": false\n                }\n            ]\n        }\n    ]\n}",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [
+        1580,
+        240
+      ],
+      "id": "c3cff059-08d8-4c1b-9f67-aeada414f1d5",
+      "name": "Wallet Bot"
+    }
+  ],
+  "pinData": {},
+  "connections": {
+    "Webhook": {
+      "main": [
+        [
+          {
+            "node": "AI Agent",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "OpenAI Chat Model": {
+      "ai_languageModel": [
+        [
+          {
+            "node": "AI Agent",
+            "type": "ai_languageModel",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "AI Agent": {
+      "main": [
+        [
+          {
+            "node": "Map Trigger Input",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Map Trigger Input": {
+      "main": [
+        [
+          {
+            "node": "Switch",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Switch": {
+      "main": [
+        [
+          {
+            "node": "GitHub Snap Core",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "GitHub BE Portal",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "GitHub Wallet",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "GitHub Snap Core": {
+      "main": [
+        [
+          {
+            "node": "Snap Core CU",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Snap Core CU": {
+      "main": [
+        [
+          {
+            "node": "Snap Slack Bot",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "GitHub BE Portal": {
+      "main": [
+        [
+          {
+            "node": "BE Portal CU",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "BE Portal CU": {
+      "main": [
+        [
+          {
+            "node": "BE Portal Slack Bot",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "GitHub Wallet": {
+      "main": [
+        [
+          {
+            "node": "Wallet CU",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Wallet CU": {
+      "main": [
+        [
+          {
+            "node": "Wallet Bot",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "active": true,
+  "settings": {
+    "executionOrder": "v1"
+  },
+  "versionId": "3cc7d622-a73e-47c2-87b3-33543d7976e2",
+  "meta": {
+    "instanceId": "558d88703fb65b2d0e44613bc35916258b0f0bf983c5d4730c00c424b77ca36a"
+  },
+  "id": "iOxAb9suciq7W5Gp",
+  "tags": [
+    {
+      "createdAt": "2025-01-11T16:05:18.423Z",
+      "updatedAt": "2025-01-11T16:05:18.423Z",
+      "id": "6zcEbSKpAT7efKYI",
+      "name": "Paper"
+    }
+  ]
+}
